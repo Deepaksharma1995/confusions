@@ -55,9 +55,11 @@ class DishDetail extends Component {
 
   render() {
     return (
+      <div class = "container">
       <div>
       {this.renderDish(this.props.dish)}
     </div>
+  </div>
     );
   }
 }
