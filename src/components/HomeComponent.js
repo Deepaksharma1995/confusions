@@ -1,10 +1,10 @@
 import React from 'react';
 import { Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle} from 'reactstrap';
+    CardTitle, CardSubtitle } from 'reactstrap';
 
-function RenderCard({item}) {
+function RenderCard({ item }) {
 
-    return(
+  return (
         <Card>
             <CardImg src={item.image} alt={item.name} />
             <CardBody>
@@ -18,7 +18,7 @@ function RenderCard({item}) {
 }
 
 function Home(props) {
-    return(
+  return (
         <div className="container">
             <div className="row align-items-start">
                 <div className="col-12 col-md m-1">
