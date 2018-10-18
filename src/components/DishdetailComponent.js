@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem,
     Row, Col, Modal, Button, ModalHeader, ModalBody, Label } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { Loading } from './LoadingComponent';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -22,11 +23,11 @@ function RenderDish({dish}) {
     );
 }
 
-function RenderComments({comments}) {
-    if (comments != null) {
-        const comm = comments.map((comment) => {
+function RenderComments({ comments, addComment, dishId }) {
+  if (comments != null) {
+    const comm = comments.map((comment) => {
             var date = new Intl.DateTimeFormat('en-US',
-                { year: 'numeric', month: 'short', day: '2-digit'}).format(
+                { year: 'numeric', month: 'short', day: '2-digit' }).format(
                     new Date(Date.parse(comment.date)));
             return (
                 <li key={comment.id}>
@@ -34,24 +35,23 @@ function RenderComments({comments}) {
                     <p>-- {comment.author} {date}</p>
                 </li>
             );
-        })
-        return(
+          });
+    return (
             <div className="col-12 col-md-5 m-1">
                 <h4>Comments</h4>
                 <ul className="list-unstyled">
                     {comm}
                 </ul>
-                <CommentForm />
+                      <CommentForm dishId={dishId} addComment={addComment} />
             </div>
         );
-    }
-    else {
-        return(
+  } else {
+    return (
             <div>
-                <CommentForm />
+                      <CommentForm dishId={dishId} addComment={addComment} />
             </div>
-        )
-    }
+        );
+  }
 }
 
 class CommentForm extends Component {
@@ -72,10 +72,9 @@ class CommentForm extends Component {
         });
     }
 
-    handleSubmit(values) {
-        console.log("Current State is: " + JSON.stringify(values));
-        alert("Current State is: " + JSON.stringify(values));
-    }
+  handleSubmit(values) {
+    this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+  }
 
     render () {
         const initialState = {
@@ -149,7 +148,25 @@ class CommentForm extends Component {
 };
 
 const DishDetail = (props) => {
-    if (props.dish != null) {
+  if (props.isLoading) {
+          return(
+              <div className="container">
+                  <div className="row">
+                      <Loading />
+                  </div>
+              </div>
+          );
+      }
+      else if (props.errMess) {
+          return(
+              <div className="container">
+                  <div className="row">
+                      <h4>{props.errMess}</h4>
+                  </div>
+              </div>
+          );
+      }
+    else if (props.dish != null) {
         return(
             <div className="container">
                 <div className="row">
@@ -164,7 +181,8 @@ const DishDetail = (props) => {
                 </div>
                 <div className="row">
                     <RenderDish dish={props.dish} />
-                    <RenderComments comments={props.comments} />
+                    <RenderComments comments={props.comments}
+                      addComment = {props.addComment} dishId = {props.dish.Id} />
                 </div>
             </div>
         );
