@@ -24,7 +24,7 @@ function RenderDish({dish}) {
     );
 }
 
-function RenderComments({ comments, addComment, dishId }) {
+function RenderComments({ comments, postComment, dishId }) {
   if (comments != null) {
     const comm = comments.map((comment) => {
             var date = new Intl.DateTimeFormat('en-US',
@@ -43,13 +43,13 @@ function RenderComments({ comments, addComment, dishId }) {
                 <ul className="list-unstyled">
                     {comm}
                 </ul>
-                      <CommentForm dishId={dishId} addComment={addComment} />
+                      <CommentForm dishId={dishId} postComment={postComment} />
             </div>
         );
   } else {
     return (
             <div>
-                      <CommentForm dishId={dishId} addComment={addComment} />
+                      <CommentForm dishId={dishId} postComment={postComment} />
             </div>
         );
   }
@@ -74,7 +74,7 @@ class CommentForm extends Component {
     }
 
   handleSubmit(values) {
-    this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+    this.props.postComment(this.props.dishId, values.rating, values.author, values.comment);
   }
 
     render () {
@@ -183,7 +183,7 @@ const DishDetail = (props) => {
                 <div className="row">
                     <RenderDish dish={props.dish} />
                     <RenderComments comments={props.comments}
-                      addComment = {props.addComment} dishId = {props.dish.Id} />
+                      postComment = {props.postComment} dishId = {props.dish.Id} />
                 </div>
             </div>
         );
